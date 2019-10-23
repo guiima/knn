@@ -1,3 +1,6 @@
+import math
+
+
 def lerArquivo(url):
     arquivo = open(url)
 
@@ -25,14 +28,18 @@ conteudo, tamanhoInstancia = lerArquivo('dataset.txt')
 def distanciaEuclidiana(instanciaA, instanciaB, tamanhoInstancia):
     soma = 0
     instanciaAInt = []
+    instanciaBInt = []
 
     # transforma o vetor de string para inteiro
     for x in range(tamanhoInstancia):
         instanciaAInt.append(int(instanciaA[x]))
 
+    for x in range(tamanhoInstancia):
+        instanciaBInt.append(int(instanciaB[x]))
+
     # calcula a distanciaEuclidiana
     for x in range(tamanhoInstancia - 1):
-        soma += ((instanciaAInt[x] - instanciaB[x]) ** 2)
+        soma += ((instanciaAInt[x] - instanciaBInt[x]) ** 2)
 
     return soma ** (1/2)
 
@@ -79,15 +86,53 @@ def classificarAmostra(conteudo, novaInstancia, k, tamanhoInstancia):
 
     if(classe1 > classe2):
         print("valor pertence a classe 1")
+        return 1
     elif(classe1 < classe2):
         print("valor pertence a classe 2")
+        return 2
     else:
         print("empate")
+        return 0
 
-    return distanciasOrdenadas
+    # return distanciasOrdenadas
 
 
-vet = [1, 2, 1, 2]
+# vet = [1, 2, 1, 2]
 
-x = classificarAmostra(conteudo, vet, 4, tamanhoInstancia)
-print(x)
+# x = classificarAmostra(conteudo, vet, 4, tamanhoInstancia)
+# print(x)
+
+
+def treinamento(conteudo, k):
+    numero_acertos = 0
+    qtd_instancias = len(conteudo)
+    conteudo_treinamento = []
+    conteudo_teste = []
+
+    # 70% de treinamento e 30% de teste (math.ceil arrendoda pra cima o valor obtido)
+    qtd_treinamento = math.ceil(qtd_instancias * 0.7)
+    qtd_teste = qtd_instancias - qtd_treinamento
+
+    # coloca as instancias de treinamento em um vetor separado
+    for x in range(qtd_treinamento):
+        conteudo_treinamento.append(conteudo[x])
+
+    # coloca as instancias de teste em um vetor separado
+    cont = qtd_treinamento
+    while(cont < qtd_instancias):
+        conteudo_teste.append(conteudo[qtd_treinamento])
+        cont += 1
+
+    # realiza os teste e anota a quantidade de acertos
+    for x in range(qtd_teste):
+        classse = classificarAmostra(
+            conteudo_treinamento, conteudo_teste[x], k, tamanhoInstancia)
+
+        classe_esperada = int(conteudo_teste[x][tamanhoInstancia - 1])
+
+        if(classe_esperada == classse):
+            numero_acertos += 1
+        print("numero de acertos: ", numero_acertos)
+
+
+treinamento(conteudo, 3)
