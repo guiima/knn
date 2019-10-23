@@ -1,5 +1,7 @@
 import math
 
+# def minimo_maximo():
+
 
 def lerArquivo(url):
     arquivo = open(url)
@@ -13,9 +15,13 @@ def lerArquivo(url):
         # separa todos os atributos desta linha e atribui em aux2
         aux2 = aux1[0].split(',')
 
+        # print(aux2)
         # armazena o tamanho da instancia para saber quantos atributos tem
         tamanhoInstancia = len(aux2)
+        # print(tamanhoInstancia)
 
+        # for x in range(tamanhoInstancia):
+        #    aux3 = aux2[x]
         # cada posição do vetor conteudo tem uma instancia formatada ex: conteudo[0] contém ['1', '2', '3', ..., 'n']
         conteudo.append(aux2)
 
@@ -32,10 +38,10 @@ def distanciaEuclidiana(instanciaA, instanciaB, tamanhoInstancia):
 
     # transforma o vetor de string para inteiro
     for x in range(tamanhoInstancia):
-        instanciaAInt.append(int(instanciaA[x]))
+        instanciaAInt.append(float(instanciaA[x]))
 
     for x in range(tamanhoInstancia):
-        instanciaBInt.append(int(instanciaB[x]))
+        instanciaBInt.append(float(instanciaB[x]))
 
     # calcula a distanciaEuclidiana
     for x in range(tamanhoInstancia - 1):
@@ -49,6 +55,7 @@ def classificarAmostra(conteudo, novaInstancia, k, tamanhoInstancia):
     instaciaComparada = []
     classe1 = 0
     classe2 = 0
+    classe3 = 0
 
     # força o k a ser impar
     if(k % 2 == 0):
@@ -81,18 +88,22 @@ def classificarAmostra(conteudo, novaInstancia, k, tamanhoInstancia):
     for x in range(k):
         if(distanciasOrdenadas[x][1] == 1):
             classe1 += 1
-        else:
+        elif (distanciasOrdenadas[x][1] == 2):
             classe2 += 1
+        elif(distanciasOrdenadas[x][1] == 3):
+            classe3 += 1
 
     if(classe1 > classe2):
-        print("valor pertence a classe 1")
-        return 1
-    elif(classe1 < classe2):
-        print("valor pertence a classe 2")
-        return 2
+        if(classe1 > classe3):
+            # print("valor pertence a classe 1")
+            return 1
+    elif(classe2 > classe1):
+        if(classe2 > classe3):
+            # print("valor pertence a classe 2")
+            return 2
     else:
-        print("empate")
-        return 0
+        # print("valor pertence a classe 3")
+        return 3
 
     # return distanciasOrdenadas
 
@@ -120,19 +131,28 @@ def treinamento(conteudo, k):
     # coloca as instancias de teste em um vetor separado
     cont = qtd_treinamento
     while(cont < qtd_instancias):
-        conteudo_teste.append(conteudo[qtd_treinamento])
+        conteudo_teste.append(conteudo[cont])
         cont += 1
 
     # realiza os teste e anota a quantidade de acertos
+
     for x in range(qtd_teste):
-        classse = classificarAmostra(
+        classe = classificarAmostra(
             conteudo_treinamento, conteudo_teste[x], k, tamanhoInstancia)
-
         classe_esperada = int(conteudo_teste[x][tamanhoInstancia - 1])
-
-        if(classe_esperada == classse):
+        print("classe esperada: ", classe_esperada)
+        print("classe: ", classe)
+        if(classe_esperada == classe):
             numero_acertos += 1
-        print("numero de acertos: ", numero_acertos)
+
+    print("numero de instancias: ", qtd_instancias)
+    print("numero de teste: ", qtd_teste)
+    print("numero de acertos: ", numero_acertos)
 
 
 treinamento(conteudo, 3)
+
+
+# // 1 = Iris-setosa
+# // 2 = Iris-Versicolor
+# // 3 = Iris-Virginica
