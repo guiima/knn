@@ -1,10 +1,16 @@
 import math
 
-# def minimo_maximo():
+
+def normalizacao(dado, minimo, maximo):
+    resultado = int(((dado - minimo) / (maximo - minimo)))
+    return resultado
 
 
 def lerArquivo(url):
     arquivo = open(url)
+
+    maximo = 0
+    minimo = 99999
 
     conteudo = []
 
@@ -15,20 +21,31 @@ def lerArquivo(url):
         # separa todos os atributos desta linha e atribui em aux2
         aux2 = aux1[0].split(',')
 
-        # print(aux2)
+        for x in range(len(aux2)):
+            if(float(aux2[x]) > maximo):
+                maximo = float(aux2[x])
+            if(float(aux2[x]) < minimo):
+                minimo = float(aux2[x])
+
         # armazena o tamanho da instancia para saber quantos atributos tem
         tamanhoInstancia = len(aux2)
-        # print(tamanhoInstancia)
 
-        # for x in range(tamanhoInstancia):
-        #    aux3 = aux2[x]
         # cada posição do vetor conteudo tem uma instancia formatada ex: conteudo[0] contém ['1', '2', '3', ..., 'n']
         conteudo.append(aux2)
+
+    # ===========   normalizacao   =======================
+
+    # for x in range(len(conteudo)):
+    #     for y in range(tamanhoInstancia - 1):
+    #         conteudo[x][y] = normalizacao(
+    #             float(conteudo[x][y]), minimo, maximo)
+
+    # ===========   normalizacao   =======================
 
     return conteudo, tamanhoInstancia
 
 
-conteudo, tamanhoInstancia = lerArquivo('dataset.txt')
+conteudo, tamanhoInstancia = lerArquivo('dataset2.txt')
 
 
 def distanciaEuclidiana(instanciaA, instanciaB, tamanhoInstancia):
@@ -37,10 +54,10 @@ def distanciaEuclidiana(instanciaA, instanciaB, tamanhoInstancia):
     instanciaBInt = []
 
     # transforma o vetor de string para inteiro
-    for x in range(tamanhoInstancia):
+    for x in range(tamanhoInstancia - 1):
         instanciaAInt.append(float(instanciaA[x]))
 
-    for x in range(tamanhoInstancia):
+    for x in range(tamanhoInstancia - 1):
         instanciaBInt.append(float(instanciaB[x]))
 
     # calcula a distanciaEuclidiana
@@ -95,14 +112,14 @@ def classificarAmostra(conteudo, novaInstancia, k, tamanhoInstancia):
 
     if(classe1 > classe2):
         if(classe1 > classe3):
-            # print("valor pertence a classe 1")
+            print("valor pertence a classe 1")
             return 1
     elif(classe2 > classe1):
         if(classe2 > classe3):
-            # print("valor pertence a classe 2")
+            print("valor pertence a classe 2")
             return 2
     else:
-        # print("valor pertence a classe 3")
+        print("valor pertence a classe 3")
         return 3
 
     # return distanciasOrdenadas
@@ -140,19 +157,25 @@ def treinamento(conteudo, k):
         classe = classificarAmostra(
             conteudo_treinamento, conteudo_teste[x], k, tamanhoInstancia)
         classe_esperada = int(conteudo_teste[x][tamanhoInstancia - 1])
-        print("classe esperada: ", classe_esperada)
-        print("classe: ", classe)
         if(classe_esperada == classe):
             numero_acertos += 1
 
-    print("numero de instancias: ", qtd_instancias)
+    print("\nnumero de instancias: ", qtd_instancias)
+    print("numero de treinamento: ", qtd_treinamento)
     print("numero de teste: ", qtd_teste)
     print("numero de acertos: ", numero_acertos)
 
 
-treinamento(conteudo, 3)
+k = int(input("\ninsira o valor de k: "))
 
+treinamento(conteudo, k)
 
 # // 1 = Iris-setosa
 # // 2 = Iris-Versicolor
 # // 3 = Iris-Virginica
+
+
+while(1):
+    amostra = input('\ninsita a nova amostra: ')
+    amostra = amostra.split(',')
+    classificarAmostra(conteudo, amostra, k, tamanhoInstancia)
