@@ -112,23 +112,20 @@ def classificarAmostra(conteudo, novaInstancia, k, tamanhoInstancia):
 
     if(classe1 > classe2):
         if(classe1 > classe3):
-            print("valor pertence a classe 1")
+            # valor pertence a classe 1
+            print("Iris-setosa")
             return 1
     elif(classe2 > classe1):
         if(classe2 > classe3):
-            print("valor pertence a classe 2")
+            # valor pertence a classe 2
+            print("Iris-Versicolor")
             return 2
     else:
-        print("valor pertence a classe 3")
+        # valor pertence a classe 3
+        print("Iris-Virginica")
         return 3
 
     # return distanciasOrdenadas
-
-
-# vet = [1, 2, 1, 2]
-
-# x = classificarAmostra(conteudo, vet, 4, tamanhoInstancia)
-# print(x)
 
 
 def treinamento(conteudo, k):
